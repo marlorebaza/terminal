@@ -1,0 +1,160 @@
+> ls: lista archivos
+- “-l”: formato largo
+- “-a”: incluye directorios y archivos cuyo nombre empieza con punto “.” (ocultos)
+- “*”: comodín que se puede usar al inicio y/o final del valor indicado, para listar los archivos / directorios
+cuyo nombre contenta el valor indicado. Ejemplo: ls -l *.log
+
+> cp: copia archivos 
+- “-R”: si se indica un directorio entonces copia este con toda su estructura interna
+
+> mv: mueve archivos / directorios
+
+> touch: por defecto cambia el tiempo de modificación y acceso de un archivo. En caso no exista lo crea con los permisos x defecto.
+- “-r”: usa el tiempo de acceso y modificación del archivo especificado en lugar del tiempo actual
+- “-a”: cambia el tiempo de acceso del archivo. el tiempo de modificación no será cambiado a menos que se indique el flag “-m“
+- “-m”: cambia el tiempo de modificación del archivo. el tiempo de acceso no será cambiado a menos que se indique el flag “-a“
+- “-c”: no crea el archivo si no existe. No se muestra error de mensaje
+- “-A”: ajusta el tiempo (timestamp) de modificación y acceso de un archivo. Se debe indicar de la siguiente forma: [-][[hh]mm]SS:
+“-“: hace el ajuste negativo. El nuevo timestamp será anterior al actual
+“hh”: número de horas. de 00 a 99
+“mm”: número de minutos. de 00 a 59
+“SS”: número de segundos. de 00 a 59
+Este comando implica el flag “-c”, ya que si el archivo especificado no existe entonces la ejecución será ignorada sin arrojar error.
+- “-t”: cambia el tiempo de acceso y modificación al tiempo especificado en lugar del tiempo actual. Se debe indicar de la siguiente forma: [[CC]YY]MMDDhhmm[.SS]:
+“CC”: Los primeros 2 dígitos del año  (el siglo)    
+“YY”: Los segundos 2 dígitos del año. 
+“MM”: Mes del año. De 01 a 12
+“DD”: Día del mes. De 01 a 31
+“hh”: Hora del día. De 00 a 23
+“mm”: Minuto de hora. De 00 a 59
+“SS”: Segundos de minuto. De 00 a 61
+Si “YY” es especificado, pero “CC” no, entonces un valor entre 69 - 99 dado a “YY”, “CC” tendrá el valor “19”. En caso no sea así, “CC” tendrá el valor de “20”.
+Si “CC” y “YY” no son especificados, los valores por defecto se obtendrán del año actual. 
+Si “SS” no es especificada, el valor x defecto es 0
+Ejemplo: touch -t 200706302035.12 ARCHIVO 
+Fecha equivalente: Jun 30 20:35:12 2007
+          
+> cd: cambia de directorio 
+
+> pushd: realiza lo mismo que el comando “cd”, pero almacena el directorio indicado en una pila (como un portapapeles en la ventana de comandos)
+
+> popd extrae y elimina el último directorio de la pila y efectúa un “cd” sobre este
+
+> man: muestra un manual / guía del comando indicado
+
+> rm: elimina los directorio(s) / archivo(s) indicados:
+- “-f”: fuerza la eliminación (ignora los archivos y argumentos inexistentes. No pregunta) independientemente de los permisos del archivo. Si el archivo no existe, no muestra un mensaje de diagnóstico ni modifica el estado de salida para reflejar un error. Anula cualquier flag “-f“ previo 
+- “-i”: solicita confirmación antes de eliminar cada archivo. Anula cualquier flag “-f“ previo 
+- “-d”: intenta remover directorios y otro tipo de archivos
+- “-r” / “-R“: Intenta eliminar la jerarquía de archivos enraizada en cada archivo
+Implica el flag “-d”
+
+> more / less: muestra el contenido de un archivo desde el inicio
+- barra espaciadora: salta a siguiente hoja
+- enter: scrolea N líneas. x defecto N es igual a 1
+- tecla d: scrolea haca atrás N líneas
+- tecla b: scrolea haca adelante N líneas
+- “-n”: número de líneas, comenzando por la última (no aplica para less)
+
+
+> tail: muestra el contenido desde el final de los archivos indicados
+- “-n”: número de líneas, comenzando por la última
+- “-f”: Permite que se cree un loop en búsqueda de nuevos datos al final de los archivos indicados y cuando se encuentren se imprimirán
+
+> cat: concatena e imprime un archivo
+
+> which: muestra la ruta de los programas indicados. 
+- Ejemplo: which python python3 npm…
+- Resultado: 
+/Users/marlorebazaloyola/anaconda3/bin/python
+/Users/marlorebazaloyola/anaconda3/bin/python3
+/usr/local/bin/npm
+
+> alias: permite asociar un comando o grupo de comandos a una cadena
+- Sintaxis: alias CUALQUIER_NOMBRE=“COMANDO…”
+Luego de eso el alias indicado se podrá ejecutar como un comando cualquiera. Lo que se indique después de este, será concatenado al contenido del alias.
+Ejemplo: 
+$ alias mld="ls -lha”
+$ mld mi_directorio 
+
+
+> echo: Muestra los operandos indicados, separados por un espacio en blanco seguidos de un salto de línea final
+- “-n”: no imprime el caracter final de salto de línea
+Se puede aprovechar para mostrar los valores de las variables de entorno.
+- Ejemplo: echo -n $PATH $MONGO_PATH $CONDA_PREFIX
+- Resultado:
+/Users/marlorebazaloyola/anaconda3/bin:/Users/marlorebazaloyola/anaconda3/condabin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/Library/Frameworks/Python.framework/Versions/3.5/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Applications/mongodb/bin /Applications/mongodb /Users/marlorebazaloyola/anaconda3
+
+> ~/.bash_profile: Archivo de configuración para configurar el entorno de usuario. Puede ser modificado y agregar cualquier configuración adicional. Se ejecuta cada vez que un usuario abre una terminal (o se logea al sistema). En mac se llama de esta forma, puede que en otras distribuciones linux se llame de otra forma.
+
+> export: crea o modifica el valor de una variable de entorno en la sesión actual de la interfaz de linea de comandos (shell)
+- si se ejecuta sin argumentos lista todas las variables exportadas
+- “-f”: indica que lo que se está exportando es una función, si no se indica asume que es una variable lo que se está exportando
+- Ejemplo exportando una función y ejecutándola:
+$ my_function() { echo 'hola soy cara!'; }
+$ export -f my_function 
+$ my_function
+$ hola soy cara!
+
+> | : (pipe) barra vertical o palote, se utiliza para canalizar un comando a otro. Es decir, dirige la salida del primer comando a la entrada del segundo comando.
+
+> signo mayor “>” (Estándar output / error): Permite indicar la salida del estándar output y error al ejecutar un comando. Por defecto hace referencia al estándar output y si no existe crea el archivo, en caso exista sobreescribe su contenido.
+- “1>”: hace referencia a la primera variable que es el resultado del estándar output
+- “2>”: hace referencia a la primera variable que es el resultado del estándar error
+- “>>”: permite indicar que la salida se agregue al archivo después de su última línea y no sobre-escriba el contenido
+Nota:
+- Ejemplo de ejecución: python runMe.py 1>> salida 2>> error
+- Enviar el stdout y stderror al mismo archivo: python runMe.py > todo.log 2>&1
+“&1” hace referencia al primer parámetro, es decir a “todo.log”. 
+Es equivalente a: python runMe.py > todo.log 2> todo.log
+En caso se quiera agregar la data y no sobre escribirla completamente, bastará con agregar un signo mayor solamente al primer argumento (No al segundo), ejemplo: python runMe.py >> todo.log 2> todo.log
+
+> signo menor “<” (Estándar input): Permite indicar la data de entrada al ejecutar un comando
+Ejemplo, ejecutamos script sql: mysql -u root -p < script.sql (el password es “mysql” xD)
+
+> Procesos:
+1. top: comando que muestra y actualiza información ordenada de los procesos en ejecución.
+- “q”: presionando esta tecla salimos de la lista
+- “o”: presionando esta tecla, nos permite ingresar la llave de una columna del listado de procesos para poder
+ordenarlos de mayor a menor por este criterio
+2. kill -9 [PID]: Mata (distinto a finalizar) el proceso con el identificador indicado.
+3. “ &”: espacio + “&” al final de un comando, lo ejecuta en background en la terminal. 
+Luego de ejecutarlo en background, se muestra su PID.
+4. control + C: No mata un proceso, sino que lo finaliza.
+5. Cuando se mata un proceso de un comando en la misma terminal en la que se ejecutó en background, se muestra en la salida
+el comando tal como se ejecutó
+6. DATO: No cometer el error de ejecutar un comando en background que arroje salida, sin pasarle argumentos de estandar de salida y error, ya que escribirá la salida en el mismo propmt donde se quiere escribir otros comandos.
+Ejemplo de comando: python runMe.py 5 &
+Para solucionarlo se tendrá que matar el proceso desde otra terminal.
+7. Ejecutar secuencia de procesos: se debe añadir un punto y coma “;”
+Ejemplo: python runMe.py 4; echo “Hi mundo”; python runMe.py 10
+Esto permite ejecutar el siguiente proceso luego de que finalice o se mate el anterior
+
+> ps: Muestra el estado de todos los procesos que se están ejecutando
+- “-w”: Permite ampliar el ancho de salida en la que muestra la información (es lo que entendí xD)
+- “-A”: Muestra la información de los procesos de otros usuarios.
+
+> wc: Cuenta el número de palabra, líneas, caracteres y/o bytes de los archivos indicados
+- “-c”: cuenta el número de bytes. Cancela cualquier uso previo de la opción “-m“
+- “-l”: cuenta el número de líneas
+- “-m“: cuenta el número de caracteres. Si el entorno local actual no admite caracteres multibyte, esto es equivalente 
+a la opción “-c”. Cancela cualquier uso previo de la opción “-c”.
+- “-w“: cuenta el número de palabras
+- Ejemplo: wc -l todo.log, salida: 16 todo.log => 16 líneas
+- También se puede usar con el palote, ejemplo: cat todo.log | wc -l => 16
+
+> uptime: Muestra cuánto tiempo ha estado funcionando el sistema: hora, tiempo que lleva prendida, usuarios logeados y carga promedio en los últimos 5, 10 y 15 minutos (no sé en que medida pone esta carga)
+Ejemplo de salida:
+14:16  up 15 days,  2:56, 2 users, load averages: 3.27 2.83 2.48
+
+
+ACA ME QUEO:
+https://platzi.com/clases/1276-terminal/11191-power-tools-comandos-poderosos-de-busqueda/
+
+
+PENDIENTES POR VER:
+- stat => stat -f 'ACCESO: %Sa  MOD: %Sm  CREACION: %SB' numeros.txt   => No sé si es la fecha de acceso correcta
+- grep
+- set vs export vs env: NO entendí muy bien:
+https://hackjutsu.com/2016/08/04/Difference%20between%20set,%20export%20and%20env%20in%20bash/
+- eliminación con rm (va a la papelera?)

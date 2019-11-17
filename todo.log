@@ -1,0 +1,16 @@
+'1' No es múltiplo de 10!
+'2' No es múltiplo de 10!
+'3' No es múltiplo de 10!
+'4' No es múltiplo de 10!
+'5' No es múltiplo de 10!
+'6' No es múltiplo de 10!
+'7' No es múltiplo de 10!
+'8' No es múltiplo de 10!
+'9' No es múltiplo de 10!
+'10' Sí es múltiplo de 10!
+'11' No es múltiplo de 10!
+'12' No es múltiplo de 10!
+Traceback (most recent call last):
+  File "runMe.py", line 13, in <module>
+    time.sleep(1)
+KeyboardInterrupt
