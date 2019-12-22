@@ -121,8 +121,7 @@ ordenarlos de mayor a menor por este criterio
 3. “ &”: espacio + “&” al final de un comando, lo ejecuta en background en la terminal. 
 Luego de ejecutarlo en background, se muestra su PID.
 4. control + C: No mata un proceso, sino que lo finaliza.
-5. Cuando se mata un proceso de un comando en la misma terminal en la que se ejecutó en background, se muestra en la salida
-el comando tal como se ejecutó
+5. Cuando se mata un proceso de un comando en la misma terminal en la que se ejecutó en background, se muestra en la salida el comando tal como se ejecutó
 6. DATO: No cometer el error de ejecutar un comando en background que arroje salida, sin pasarle argumentos de estandar de salida y error, ya que escribirá la salida en el mismo propmt donde se quiere escribir otros comandos.
 Ejemplo de comando: python runMe.py 5 &
 Para solucionarlo se tendrá que matar el proceso desde otra terminal.
@@ -137,8 +136,7 @@ Esto permite ejecutar el siguiente proceso luego de que finalice o se mate el an
 > wc: Cuenta el número de palabra, líneas, caracteres y/o bytes de los archivos indicados
 - “-c”: cuenta el número de bytes. Cancela cualquier uso previo de la opción “-m“
 - “-l”: cuenta el número de líneas
-- “-m“: cuenta el número de caracteres. Si el entorno local actual no admite caracteres multibyte, esto es equivalente 
-a la opción “-c”. Cancela cualquier uso previo de la opción “-c”.
+- “-m“: cuenta el número de caracteres. Si el entorno local actual no admite caracteres multibyte, esto es equivalente a la opción “-c”. Cancela cualquier uso previo de la opción “-c”.
 - “-w“: cuenta el número de palabras
 - Ejemplo: wc -l todo.log, salida: 16 todo.log => 16 líneas
 - También se puede usar con el palote, ejemplo: cat todo.log | wc -l => 16
