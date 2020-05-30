@@ -145,6 +145,36 @@ Esto permite ejecutar el siguiente proceso luego de que finalice o se mate el an
 Ejemplo de salida:
 14:16  up 15 days,  2:56, 2 users, load averages: 3.27 2.83 2.48
 
+> Sustitución de comandos:
+Consiste en recuperar la salida de un comando en la línea de comandos. Las salidas de comandos pueden utilizarse para la asignación de una variable o como argumento de otro comando.
+Fuente: https://www.ediciones-eni.com/open/mediabook.aspx?idR=a849d7c6bede7bcbd31416bbbf035a4b
+Ejemplo 1:
+echo "mi login es $(whoami)" => devuelve => mi login es marlorebazaloyola
+- la utilidad “whoami” muestra el id del usuario:
+
+Ejemplo 2:
+echo "carpetas: $(ls /Users/$(whoami))" => devuelve:
+carpetas: Adlm
+AndroidStudioProjects
+Applications
+Desktop
+Documents
+…
+- Explicación:
+1. $(whoami) => devuelve => marlorebazaloyola
+2. $(ls /Users/marlorebazaloyola) => devuelve => listado de archivos / directorios dentro de la carpeta /Users/marlorebazaloyola 
+3. finalmente se imprime (por el uso de echo) el resultado del punto 2 con el texto prefijado “carpetas: “
+
+> history:
+Muestra los últimos 500 comandos ejecutados.
+
+> ! : Permite realizar cosas como:
+1. !50 : Ejecuta el comando en la posición 50 del historial (ver history)
+2. !! : re-ejecuta el último comando
+3. !ls : re-ejecuta el ultimo comando que comience con "ls"
+4. !-3 : re-ejecuta el antepenultimo comando
+5. Entre otras utilidades semejantes. Ver https://unix.stackexchange.com/a/3748
+
 
 ACA ME QUEO:
 https://platzi.com/clases/1276-terminal/11191-power-tools-comandos-poderosos-de-busqueda/
