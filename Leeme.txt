@@ -1,6 +1,15 @@
 > ls: lista archivos
-- “-l”: formato largo
+- “-l”: fuerza salida para que sea una entrada por línea. 
+El primer caracter por cada fila indicará si es un archivo (“-”), directorio (“d”) o link (“l”).
+El siguiente grupo de 3 caracteres son los permisos que tiene el propietario
+El siguiente grupo de 3 caracteres son los permisos que tiene el grupo al que pertenece el propietario
+El siguiente grupo de 3 caracteres son los permisos que tiene el resto
+El siguiente carácter no sé xD
+La siguiente columna el nombre del usuario propietario
+La siguiente columna el nombre del grupo al que pertenece el propietario
+- “-R“: Lista recursiva de los sub-directorios encontrados 
 - “-a”: incluye directorios y archivos cuyo nombre empieza con punto “.” (ocultos)
+- “-h“: se debe usar con “-l”. Muestra los sufijos en la columna de tamaño para reducir los dígitos de esta información a 2 o 3. Por ejemplo. En lugar de mostrar “11875” (bytes), mostrará “12K”.
 - “*”: comodín que se puede usar al inicio y/o final del valor indicado, para listar los archivos / directorios
 cuyo nombre contenta el valor indicado. Ejemplo: ls -l *.log
 
@@ -36,7 +45,9 @@ Fecha equivalente: Jun 30 20:35:12 2007
           
 > cd: cambia de directorio 
 
-> pushd: realiza lo mismo que el comando “cd”, pero almacena el directorio indicado en una pila (como un portapapeles en la ventana de comandos)
+> pwd: print working directory. muestra la ruta del directorio actual
+
+> pushd: almacena el directorio actual en una pila (como un portapapeles en la ventana de comandos) y luego realiza lo mismo que el comando “cd” a la ruta indicada
 
 > popd extrae y elimina el último directorio de la pila y efectúa un “cd” sobre este
 
@@ -96,11 +107,9 @@ $ export -f my_function
 $ my_function
 $ hola soy cara!
 
-> | : (pipe) barra vertical o palote, se utiliza para canalizar un comando a otro. Es decir, dirige la salida del primer comando a la entrada del segundo comando.
-
 > signo mayor “>” (Estándar output / error): Permite indicar la salida del estándar output y error al ejecutar un comando. Por defecto hace referencia al estándar output y si no existe crea el archivo, en caso exista sobreescribe su contenido.
 - “1>”: hace referencia a la primera variable que es el resultado del estándar output
-- “2>”: hace referencia a la primera variable que es el resultado del estándar error
+- “2>”: hace referencia a la segunda variable que es el resultado del estándar error
 - “>>”: permite indicar que la salida se agregue al archivo después de su última línea y no sobre-escriba el contenido
 Nota:
 - Ejemplo de ejecución: python runMe.py 1>> salida 2>> error
@@ -109,8 +118,26 @@ Nota:
 Es equivalente a: python runMe.py > todo.log 2> todo.log
 En caso se quiera agregar la data y no sobre escribirla completamente, bastará con agregar un signo mayor solamente al primer argumento (No al segundo), ejemplo: python runMe.py >> todo.log 2> todo.log
 
-> signo menor “<” (Estándar input): Permite indicar la data de entrada al ejecutar un comando
+> signo menor “<” (Estándar input): Permite indicar un archivo como entrada al ejecutar un comando
 Ejemplo, ejecutamos script sql: mysql -u root -p < script.sql (el password es “mysql” xD)
+
+> | : (pipe) barra vertical o palote, se utiliza para canalizar un comando a otro. Es decir, dirige la salida del primer comando a la entrada del segundo comando.
+Ejemplo 1: 
+cat script.sql | mysql -u root -p ( Es similar a ejecutar: mysql -u root -p < script.sql. La diferencia es que con el signo “<” debe especificarse un archivo como entrada)
+Ejemplo 2:
+cat data.csv | grep lo | awk -F "," '{
+split($5, a, "|"); 
+values="";
+for (i=1; i<=length(a); i++) {
+if (i == length(a)) {
+values=values a[i];
+} else {
+values=values a[i] ",";
+}
+}
+printf("%s tiene %s años y le gusta: %s.\n", $2, $4, values);
+}' | grep -v Lolo | less
+
 
 > Procesos:
 1. top: comando que muestra y actualiza información ordenada de los procesos en ejecución.
@@ -130,7 +157,8 @@ Ejemplo: python runMe.py 4; echo “Hi mundo”; python runMe.py 10
 Esto permite ejecutar el siguiente proceso luego de que finalice o se mate el anterior
 
 > ps: Muestra el estado de todos los procesos que se están ejecutando
-- “-w”: Permite ampliar el ancho de salida en la que muestra la información (es lo que entendí xD)
+- “aux” (sin guión): Muestra a detalle todos los procesos en el sistema en un formato orientado al usuario. FUENTE: https://www.linuxito.com/gnu-linux/nivel-alto/38-ps-aux-explicado
+- “-w”: Amplia el ancho de salida en donde se muestra la información. (Por defecto el tamaño de la ventana actual)
 - “-A”: Muestra la información de los procesos de otros usuarios.
 
 > wc: Cuenta el número de palabra, líneas, caracteres y/o bytes de los archivos indicados
@@ -175,14 +203,170 @@ Muestra los últimos 500 comandos ejecutados.
 4. !-3 : re-ejecuta el antepenultimo comando
 5. Entre otras utilidades semejantes. Ver https://unix.stackexchange.com/a/3748
 
+> grep: Busca dentro de un archivo o directorio dado, seleccionando las líneas que coinciden con el patrón(es) especificado
+- “-r“: busca recursivamente en los sub-directorios
+- “-e“: patrón de búsqueda
+- “-n“: cada línea del resultado es precedida por el número de fila en el archivo
+- “-v“: Invierte la selección. Selecciona las líneas que NO hagan match con cualquier patrón especificado
 
-ACA ME QUEO:
-https://platzi.com/clases/1276-terminal/11191-power-tools-comandos-poderosos-de-busqueda/
+> find: Busca en la metadata de directorios y/o archivos
+- “-name“: nombre.
+- “-type”: tipo. Algunos valores posibles son: f=archivo, d=directorio, l=enlace simbolico
+- “-size”: tamaño. “+”=mayor que, “-”=menor que, si no se indica nada será igual que. Algunos valores posibles son: c=bytes, k=kilobytes, M=megabytes… Si no se indica una medida lo indicado se multiplicará por 512 bytes. Por ejemplo si se indica 10 se considerará como 5120 bytes
+- Ejemplo: listar los archivos cuyo nombre comienza con “ta” y tienen un tamaño mayor a 130 bytes: find . -type f -size +132c -name "ta*" 
+
+> date: muestra o cambia la fecha y tiempo
+
+> time: Imprime un resumen del tiempo de duración de ejecución de un determinado comando
+Mas información: https://es.wikipedia.org/wiki/Time_(Unix)#Tiempo_de_usuario_vs._tiempo_de_sistema
+- Tiempo real: tiempo transcurrido que tardó el comando en ejecutarse
+- Tiempo de usuario: cantidad de segundos de CPU que ese comando usa en modo usuario
+- Tiempo de sistema: cantidad de segundos de CPU que ese comando usa en modo kernel
+Ejemplo: Mostrará el resumen del tiempo de ejecución del comando grep
+- comando: time grep -r . -e a
+- resultado: 
+real	0m0.021s
+user	0m0.005s
+sys	0m0.007s
+
+> curl: Transfiere data desde / hacia un servidor soportando diferentes protocolos (http, https, etc)
+- “-#”: mostrará el progreso de la transferencia usando “#” como parte de la barra de progreso, en lugar del x defecto.
+- “-o“: 
+1. Escribe la salida en el archivo indicado:
+curl https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen-320x168.jpg -o myImage.jpg
+2. Escribe la salida en el estándar output si se envía como valor un guión “-“:
+curl https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen-320x168.jpg -o -
+3. Se puede indicar más de una vez por cada URL, el orden no importa:
+curl -o first.png https://www.40defiebre.com/wp-content/uploads/2015/10/imagenes.png -o second.jpg https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen-320x168.jpg
+curl https://www.40defiebre.com/wp-content/uploads/2015/10/imagenes.png https://www.adslzone.net/app/uploads-adslzone.net/2019/04/borrar-fondo-imagen-320x168.jpg -o first.png -o second.jpg
+
+> zip: Comprime los archivos indicados
+zip todo.zip *
+zip casi-todo.zip aeropuertos.csv first.png
+
+> unzip: lista, prueba y extrae archivos comprimidos dentro de ZIP: 
+unzip todo.zip
+- “-v”: Lista los archivos (formato detallado) dentro del ZIP indicado si no se indica un ZIP mostrará la versión del comando unzip
+- “-l”: Lista los archivos (formato corto) dentro del ZIP indicado
+
+> tar: Manipula archivos: Empaqueta varios archivos en un solo, no los comprime. A menos que se combine con un programa de compresión, como gzip (opción “z”).
+La ganancia de usar tar es que se evita usar el espacio en el sistema de archivos ya que encierra varios archivos en una sola “cinta”.
+- “-x”: extrae archivos
+- “-c”: crea un nuevo archivo conteniendo los archivos indicados (no es compresión)
+- “-f”: lee el archivo o escribe sobre el archivo indicado
+- “-z”: comprime usando gzip
+- Ejemplos:
+Crear cinta con todos los archivos: tar cf myFirstTape.tar *
+Crear cinta comprimida con todos los archivos: tar cfz myFirstTape.tar.gz *
+Listar contenido de cinta: tar tf myFirstTape.tar 
+Descomprimir cinta con gzip: tar xfz myFirstTape.tar.gz
+- .zip vs .tar.gz: 
+1. zip: cada archivo es comprimido de manera independiente. 
+desventaja: La compresión no aprovecha las similitudes de contenido entre los archivos contenidos.
+ventaja: se puede acceder a cualquiera de los archivos contenidos
+2. .tar.gz: 
+desventaja: se debe desempaquetar todo el archivo (“cinta”) para acceder a los archivos contenidos dentro
+ventaja: La compresión aprovecha las similitudes de contenido entre los archivos contenidos, ya que la compresión es sobre la “cinta”
+Fuente: https://stackoverflow.com/a/10540952
+Nota: 
+Cabe mencionar que no es necesario usar el guión para indicar las opciones de tar. 
+En caso se ejecute este comando: tar -cfz myFirstTape.tar.gs *, arrojará el error “tar: myfirsta.tar: Cannot stat: No such file or directory“, ya que toma “z” como la cinta donde se almacenarán los archivos “myFirstTape.tar.gs” y “*”.
+Si se quiere ejecutar con guión se debe indicar la opción ”f” al último:
+tar -czf myFirstTape.tar.gs *
+Fuente: https://unix.stackexchange.com/a/149496
+
+
+
+Fuente: https://www.enmimaquinafunciona.com/pregunta/26324/que-es-mas-eficiente---tar-o-zip-de-compresion-cual-es-la-diferencia-entre-el-tar-y-zip
+
+
+> AWK: lenguaje de programación diseñado para procesar datos basados en texto, ya sean ficheros o flujos de datos: awk ‘SINTAXIS’
+Sobre AWK: https://es.wikipedia.org/wiki/AWK
+- “-F”: define el campo separador (field separator: fs) por línea. Puede ser una expresion regular
+- print: imprimir texto
+- printtf: imprimir texto forrajeado
+- $#: “#” referencia al número de argumento de la línea actual. “$0”, se refiere a la línea entera. {printf($0)} imprimirá la línea entera.
+Por ejemplo, Separar cada línea por la coma (“,”) e imprimir el segundo y tercer elemento de la separación y agregarle un salto de línea:
+- cat data.csv | awk -F "," '{printf("Nombre: %s y Apellido: %s..\n", $2, $3)}'
+- awk -F "," '{printf("Nombre: %s y Apellido: %s..\n", $2, $3)}' data.csv
+
+> crontab: 
+- cron: administrador y ejecutor de procesos en segundo plano (daemon=demonio) en intervalos de tiempo (cada minuto, día, semana o mes). 
+Los procesos que deben ejecutarse y el momento en el que deben hacerlo se especifican en el fichero crontab.
+- crontab: permite instalar, desinstalar y listar scripts/comandos que se ejecutaran en un tiempo especificado por el usuario. Cada usuario del sistema tiene su propio archivo crontab.
+- “-l“: listar crontab’s
+- “-e”: editar crontab’s
+- En el archivo crontab se especifican 6 columnas: 
+> minuto: 0 - 59
+> hora: 0 - 23
+> día del mes: 1 - 31
+> día de la semana: 0 - 7 (0 y 7 son domingo) / o las primeras letras del nombre del día en ingles (con, que, wed, etc)
+> comando o ruta absoluta del script que se quiere ejecutar
+- comodines posibles para las columnas de tiempo (sin espacios en blanco):
+> 1,10,18 (primer, décimo y decimoctavo)
+> */5 (cada 5)
+> 1-10 (todos los primeros 10)
+> * (todos)
+- Para escribir un comentario dentro del fichero crontab la línea debe comenzar con el caracter: “#”
+
+> du: Muestra las estadísticas de uso de disco del archivo o directorio especificado. Si no se indica argumentos, mostrará los del directorio actual
+- “-h”: salida “human-readable”. Usará los sufijos de unidades: Byte, Kilobyte, etc.
+- “-d”: mostrará el uso de disco de los archivos y directorios hasta el nivel de profundidad indicado. Por ejemplo: 1 = directorios raíz, 2 = directorios raiz e hijos.
+- Ejemplo de mostrar el uso de discos del directorio actual, sus directorios hijos y nietos:
+du -h -d 2 
+
+> ln: crea un enlace que apunta y tiene los mismos nodos que el archivo o directorio original. Permite mantener múltiples copias de un archivo en diferentes lugares sin usar almacenamiento. EL cómo un enlace apunta a un archivo o directorio es una diferencia entre enlace duro y simbólico.
+- “-s”: crea un link simbólico
+- Enlace duro vs simbolico
+FUENTE: https://blog.usejournal.com/what-is-the-difference-between-a-hard-link-and-a-symbolic-link-8c0493041b62
+> Enlace duro: 
+Sólo se puede aplicar a un archivo. 
+Dado que un enlace duro apunta al contenido del archivo, un cambio en cualquiera de estos. se reflejará en el otro (una ventaja sobre simplemente copiar un archivo).
+Al eliminar el archivo origen, el enlace duro preserva el contenido del archivo.
+Está enlazado al inodo (metadatos de un archivo: propietario, tamaño, fecha de creación, etc) del archivo origen
+> Enlace simbólico: 
+Puede aplicar a un directorio o archivo y remotos
+Actua como un acceso directo.
+Al eliminar el archivo origen, el enlace simbólico queda inutilizable
+Está enlazado a otro nombre en el sistema de archivos
+- Ejemplo creación de link simbolico
+ln -s source source-link
+
+> Permisos:
+FUENTE: https://americandominios.com/conta/knowledgebase/627/Que-son-Los-permisos-777-755-700-664-666-y-CHMOD.html
+- r: lectura
+- w: escritura
+- x: ejecución (si es un script)
+- combinación = binario = decimal:
+	rwx = 111 = 7
+	rw- = 110 = 6
+	-wx = 011 = 3
+	r-x = 101 = 5
+	r— = 100 = 4
+	—— = 000 = 0
+- chmod: modifica los permisos de un archivo o directorio
+- Por ejemplo damos full permisos al propietario, lectura y escritura al grupo y ningún permiso al resto: chmod 740 task.py
+- Diferencia de ejecutar un script con un interprete vs ejecutarlo directamente 
+> Ejecución directa: Se espera que sea parseado con el shebang especificado, pero el SO espera que el usuario en cuestión tenga permiso de ejecución (“x”) sobre el script, sin importar el shebang.
+> Ejecución con un interprete: Lo que se ejecuta es el interprete y se le envía como argumento el script. El archivo (script) no se ejecuta, por eso no se requiere permisos de ejecución. Obviamente el usuario en cuestión sí debe tener permiso de ejecución sobre el interprete.
+FUENTE: https://stackoverflow.com/a/35865839
+
+> sudo: Ejecuta el comando como un super-usuario. La password que se ingresa es la del usuario logeado, no la del usuario root.
+Para lograr esto el usuario tendrá que estar ingresado en el fichero “sudoers”.
+- sudo visudo: lanza un editor sobre el fichero “sudoers”
+- agregar privilegios para un usuario: https://osxdaily.com/2014/02/06/add-user-sudoers-file-mac/
+
+> “#!”: Conocido como “shebang”: La primera línea en un script que indica al interpretador de comandos (shell) que use el path especificado como interprete en lugar del por defecto.
+Por ejemplo para indicar que un script se ejecute con java: 
+“#!/usr/bin/java” 
+También se pueden indicar argumentos: “#!/usr/bin/java -a -b …” 
+Es posible tbn indicando el interprete desde las variables de ambiente: “#!/usr/bin/env java”, esta forma es más “portable” porque no se revela la ruta del bash, pero es un riesgo de seguridad ya que un malware desconocido podría ser ejecutado en lugar del interprete esperado. De esta forma no se pueden indicar argumentos al interprete.
+Más detalle sobre bash vs env: https://unix.stackexchange.com/a/206366
 
 
 PENDIENTES POR VER:
+- sed
 - stat => stat -f 'ACCESO: %Sa  MOD: %Sm  CREACION: %SB' numeros.txt   => No sé si es la fecha de acceso correcta
-- grep
 - set vs export vs env: NO entendí muy bien:
 https://hackjutsu.com/2016/08/04/Difference%20between%20set,%20export%20and%20env%20in%20bash/
 - eliminación con rm (va a la papelera?)
